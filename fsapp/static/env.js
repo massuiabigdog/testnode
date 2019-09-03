@@ -1,7 +1,7 @@
 'use strict';
 
 const HOST = process.env.HOST ? process.env.HOST : 'localhost';
-const PORT = process.env.PORT ? process.env.PORT : 3000;
+const PORT = process.env.PORT ? process.env.PORT : 8008;
 const BASE_URL = process.env.BASE_URL ? process.env.BASE_URL : '';
 const SERVER_HOST = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost';
 const SERVER_URL = process.env.SERVER_URL ?
