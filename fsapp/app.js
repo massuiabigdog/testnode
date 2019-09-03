@@ -37,7 +37,7 @@ const compression = require('compression');
 const express = require('express');
 const filemanagerMiddleware = require('@opuscapita/filemanager-server').middleware;
 const logger = require('@opuscapita/filemanager-server').logger;
-const env = require('./static/env.js');
+const env = require('./env.js');
 
 const config = {
   fsRoot: path.resolve(__dirname, './demo-files'),
