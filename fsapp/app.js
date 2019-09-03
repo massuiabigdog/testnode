@@ -1,65 +1,77 @@
-// var createError = require('http-errors');
 // var express = require('express');
-// var path = require('path');
-// var cookieParser = require('cookie-parser');
-// var logger = require('morgan');
-
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
-
 // var app = express();
 
-// // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+// let config = {
+//     fsRoot: __dirname,
+//     rootName: 'Root folder',
+//     port: process.env.PORT || '8008',
+//     host: process.env.HOST || 'localhost'
+//   };
+  
+//   let filemanager = require('@opuscapita/filemanager-server');
+//   filemanager.server.run(config);
 
-// app.use(logger('dev'));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
+// // on the request to root (localhost:3000/)
+// app.get('/', function (req, res) {
+//     res.send('<b>My</b> first express http server');
+// });
 
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+// // On localhost:3000/welcome
+// app.get('/welcome', function (req, res) {
+//     res.send('<b>Hello</b> welcome to my http server made with express');
+// });
 
-// // catch 404 and forward to error handler
+// // Change the 404 message modifing the middleware
 // app.use(function(req, res, next) {
-//   next(createError(404));
+//     res.status(404).send("Sorry, that route doesn't exist. Have a nice day :)");
 // });
 
-// // error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+// // start the server in the port 3000 !
+// app.listen(8008, function () {
+//     console.log('Example app listening on port 8008.');
+// }); 
 
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
+const fs = require('fs');
+const path = require('path');
+const compression = require('compression');
+const express = require('express');
+const filemanagerMiddleware = require('@opuscapita/filemanager-server').middleware;
+const logger = require('@opuscapita/filemanager-server').logger;
+const env = require('./static/env.js');
 
-// module.exports = app;
+const config = {
+  fsRoot: path.resolve(__dirname, './demo-files'),
+  rootName: 'Customization area'
+};
 
+const app = express();
+const host = process.env.HOST || 'localhost';
+const port = process.env.PORT || '8008';
 
-var express = require('express');
-var app = express();
+fs.writeFileSync(
+  path.resolve(__dirname, './static/env.js'),
+  'window.env = ' + JSON.stringify(env) + ';'
+);
 
-// on the request to root (localhost:3000/)
-app.get('/', function (req, res) {
-    res.send('<b>My</b> first express http server');
-});
-
-// On localhost:3000/welcome
-app.get('/welcome', function (req, res) {
-    res.send('<b>Hello</b> welcome to my http server made with express');
-});
-
-// Change the 404 message modifing the middleware
+app.use(compression());
 app.use(function(req, res, next) {
-    res.status(404).send("Sorry, that route doesn't exist. Have a nice day :)");
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
 });
 
-// start the server in the port 3000 !
-app.listen(8008, function () {
-    console.log('Example app listening on port 8008.');
-}); 
+const baseUrl = process.env.BASE_URL || '/';
+
+app.use(baseUrl, filemanagerMiddleware(config));
+
+app.use(baseUrl, express.static(path.resolve(__dirname, './static')));
+app.listen(port, host, function(err) {
+  if (err) {
+    logger.error(err);
+  }
+
+  logger.info(`Server listening at http://${host}:${port}`);
+});
+
+process.on('exit', function() {
+  logger.warn('Server has been stopped');
+});
