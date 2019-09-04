@@ -1,4 +1,4 @@
-'use strict'; 
+ 'use strict';
 
 const HOST = process.env.HOST ? process.env.HOST : 'localhost';
 const PORT = process.env.PORT ? process.env.PORT : 8008;

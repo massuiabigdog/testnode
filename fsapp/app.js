@@ -1,9 +1,14 @@
 // var express = require('express');
 // var app = express();
+// const path = require('path');
+// const filemanagerMiddleware = require('@opuscapita/filemanager-server').middleware;
+// const logger = require('@opuscapita/filemanager-server').logger;
 
 // let config = {
-//     fsRoot: __dirname,
-//     rootName: 'Root folder',
+//     // fsRoot: __dirname,
+//     // rootName: 'Root folder',
+//       fsRoot: path.resolve(__dirname, './demo-files'),
+//   rootName: 'Customization area',
 //     port: process.env.PORT || '8008',
 //     host: process.env.HOST || 'localhost'
 //   };
@@ -27,9 +32,30 @@
 // });
 
 // // start the server in the port 3000 !
-// app.listen(8008, function () {
+// app.listen(8008, function (err) {
 //     console.log('Example app listening on port 8008.');
+//     if (err) {
+//       logger.error(err);
+//     }
+  
+//  //   logger.info(`Server listening at http://${host}:${port}`);
 // }); 
+// const baseUrl = process.env.BASE_URL || '/';
+
+// app.use(baseUrl, filemanagerMiddleware(config));
+
+// app.use(baseUrl, express.static(path.resolve(__dirname, './static')));
+// // app.listen(port, host, function(err) {
+// //   if (err) {
+// //     logger.error(err);
+// //   }
+
+// //   logger.info(`Server listening at http://${host}:${port}`);
+// // });
+
+// process.on('exit', function() {
+//   logger.warn('Server has been stopped');
+// });
 
 const fs = require('fs');
 const path = require('path');
