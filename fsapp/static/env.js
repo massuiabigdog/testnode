@@ -1,1 +1,0 @@
-window.env = {"HOST":"localhost","PORT":8008,"BASE_URL":"","SERVER_URL":"http://localhost:8008"};
